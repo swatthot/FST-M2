@@ -1,0 +1,38 @@
+-- Using vim, create a file named EmpData.csv and add the data from the previous slide in it.
+vim EmpData.csv
+
+-- Once the data is added and saved, run the hive command to start the Hive CLI:
+hive
+
+--Once Hive CLI has started, execute the following query
+hive> show databases;
+hive> create database office;
+hive> use office;
+
+-- Drop old tables
+DROP TABLE employee;
+
+-- Create the table employee
+CREATE TABLE employee(id INT, name STRING, dept STRING, yoj INT, salary INT)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+TBLPROPERTIES ("skip.header.line.count"="1");
+
+hive> DESCRIBE employee;
+
+-- load the data into employee table
+LOAD DATA LOCAL INPATH /user/swatthot/EmpData.csv INTO TABLE employee;
+
+-- Run query in employee table
+SELECT * FROM employee;
+SELECT COUNT(*) FROM employee;
+
+
+-- Export to HDFS Directory
+INSERT OVERWRITE DIRECTORY '/user/swatthot/HiveOutput'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM employee;
+
+-- Export to Local Directory
+INSERT OVERWRITE DIRECTORY '/user/swatthot/HiveOutput'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT COUNT(*) FROM employee;
